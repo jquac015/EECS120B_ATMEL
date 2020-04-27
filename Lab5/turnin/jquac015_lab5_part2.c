@@ -51,7 +51,7 @@ void CounterSM(){
 		case DEC_WAIT:
 			if(temp == 0x03){
 				Counter_State = RESET;
-			}else if(~PINA == 0x00){
+			}else if(temp == 0x00){
 				Counter_State = STANDBY;
 			}else{
 				Counter_State = DEC_WAIT;

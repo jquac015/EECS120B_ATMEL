@@ -13,6 +13,7 @@
 #endif
 
 enum Light_States{Start, First, FirstW, Sec, SecW, Thr, ThrW}Light_State;
+unsigned char temp;
 
 void LightSM(){
 	switch(Light_State){
@@ -20,42 +21,42 @@ void LightSM(){
 			Light_State = First;
 			break;
 		case FirstW:
-			if(PINA & 0x01){
+			if(temp==0x00){
 				Light_State = First;
 			}else{
 				Light_State = FirstW;
 			}
 			break;
 		case First:
-			if(~PINA & 0x01){
+			if(temp==0x01){
 				Light_State = SecW;
 			}else{
 				Light_State = First;
 			}
 			break;
 		case SecW:
-			if(PINA & 0x01){
+			if(temp==0x00){
 				Light_State = Sec;
 			}else{
 				Light_State = SecW;
 			}
 			break;
 		case Sec:
-			if(~PINA & 0x01){
+			if(temp==0x01){
 				Light_State = ThrW;
 			}else{
 				Light_State = Sec;
 			}
 			break;
 		case ThrW:
-			if(PINA & 0x01){
+			if(temp==0x00){
 				Light_State = Thr;
 			}else{
 				Light_State = ThrW;
 			}
 			break;
 		case Thr:
-			if(~PINA & 0x01){
+			if(temp==0x01){
 				Light_State = FirstW;
 			}else{
 				Light_State = Thr;
@@ -66,32 +67,41 @@ void LightSM(){
 			break;
 	}
 	switch(Light_State){
+		case Start:
+			temp = ~PINA&0x01;
 		case FirstW:
+			temp = ~PINA&0x01;
 			PORTC = 0x36;
 			break;
 		case First:
+			temp = ~PINA&0x01;
 			PORTC = 0x36;
 			break;
 		case SecW:
+			temp = ~PINA&0x01;
 			PORTC = 0x1B;
 			break;
 		case Sec:
+			temp = ~PINA&0x01;
 			PORTC = 0x1B;
 			break;
 		case ThrW:
+			temp = ~PINA&0x01;
 			PORTC = 0x2D;
 			break;
 		case Thr:
+			temp = ~PINA&0x01;
 			PORTC = 0x2D;
 			break;
 		default:
+			temp = ~PINA&0x01;
 			break;
 	}
 }
 
 int main(void) {
-	DDRB = 0x00;
-	PORTB = 0x00;
+	DDRA = 0x00;
+	PORTA = 0xFF;
 	DDRC = 0xFF;
 	PORTC = 0x00;
 	Light_State = Start;
