@@ -26,67 +26,63 @@
 echo ======================================================\n
 echo Running all tests..."\n\n
 
-test "PINA: 0xFF, 0xFE, 0xFE, 0xFF, 0xFD, 0xFD, 0xFF => PORTC: 0x00, state: STANDBY"
+test "PINA: 0xFF ==> PORTC: 0x00, state: STANDBY"
 set Counter_State = Start
-setPINA 0xFF
-continue 2
-setPINA 0xFE
-continue 2 
-setPINA 0xFE
-continue 2
-setPINA 0xFF
-continue 2
-setPINA 0xFD
-continue 2
-setPINA 0xFD
-continue 2
 setPINA 0xFF
 continue 2
 expectPORTC 0x00
 expect Counter_State STANDBY
 checkResult
 
-test "PINA: 0xFF, 0xFC, 0xFC, 0xFF ==> PORTC: 0x00, state: STANDBY"
-set Counter_State = Start
-setPINA 0xFF
-continue 2
-setPINA 0xFC
-continue 2
-setPINA 0xFC
-continue 2
-setPINA 0xFF
+test "PINA: 0x7C ==> PORTC: 0x00, state: RESET"
+setPINA 0x7C
 continue 2
 expectPORTC 0x00
-expect Counter_State STANDBY
+expect Counter_State RESET
 checkResult
 
-test "PINA: 0xFF, 0xFE, 0xFC, 0xFF ==> PORTC: 0x00, state: STANDBY"
-set Counter_State = Start
-setPINA 0xFF
+test "PINA: 0xF8 ==> PORTC: 0x00, state: RESET"
+setPINA 0xF8
 continue 2
+expectPORTC 0x00
+expect Counter_State RESET
+checkResult
+
+test "PINA: 0xFE ==> PORTC: 0x00, state: RESET"
 setPINA 0xFE
 continue 2
-setPINA 0xFC
+expectPORTC 0x00
+expect Counter_State RESET
+checkResult
+
+test "PINA: 0xFE ==> PORTC: 0x00, state: RESET"
+setPINA 0xFE
 continue 2
+expectPORTC 0x00
+expect Counter_State RESET
+checkResult
+
+test "PINA: 0xFF ==> PORTC: 0x00, state: STANDBY"
 setPINA 0xFF
 continue 2
 expectPORTC 0x00
 expect Counter_State STANDBY
 checkResult
 
-test "PINA: 0xFF, 0xFD, 0xFC, 0xFF ==> PORTC: 0x00, state: STANDBY"
-set Counter_State = Start
-setPINA 0xFF
-continue 2
-setPINA 0xFD
-continue 2
-setPINA 0xFC
-continue 2
+test "PINA: 0xFF ==> PORTC: 0x00, state: STANDBY"
 setPINA 0xFF
 continue 2
 expectPORTC 0x00
 expect Counter_State STANDBY
 checkResult
+
+test "PINA: 0xFD ==> PORTC: 0x00, state: DEC"
+setPINA 0xFD
+continue 2
+expectPORTC 0x00
+expect Counter_State STANDBY
+checkResult
+
 
 # Report on how many tests passed/tests ran
 set $passed=$tests-$failed

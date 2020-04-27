@@ -13,19 +13,21 @@
 #endif
 
 enum Counter_States{Start, STANDBY, INC, DEC, INC_WAIT, DEC_WAIT, RESET}Counter_State;
+unsigned char temp;
 
 void CounterSM(){
 	switch(Counter_State){
 		case Start:
 			PORTC = 0x00;
+			temp = ~PINA & 0x03;
 			Counter_State = STANDBY;
 			break;
 		case STANDBY:
-			if((~PINA == 0x03)){
+			if(temp==0x03){
 				Counter_State = RESET;
-			}else if((~PINA&0x02) && (PINC>0)){
+			}else if((temp&0x02) && (PINC>0)){
 				Counter_State = DEC;
-			}else if((~PINA&0x01) && (PINC<9)){
+			}else if((temp&0x01) && (PINC<9)){
 				Counter_State = INC;
 			}else{
 				Counter_State = STANDBY;
@@ -38,16 +40,16 @@ void CounterSM(){
 			Counter_State = DEC_WAIT;
 			break;
 		case INC_WAIT:
-			if(~PINA == 0x03){
+			if(temp==0x03){
 				Counter_State = RESET;
-			}else if(~PINA == 0x00){
+			}else if(temp == 0x00){
 				Counter_State = STANDBY;
 			}else{
 				Counter_State = INC_WAIT;
 			}
 			break;
 		case DEC_WAIT:
-			if(~PINA == 0x03){
+			if(temp == 0x03){
 				Counter_State = RESET;
 			}else if(~PINA == 0x00){
 				Counter_State = STANDBY;
@@ -56,7 +58,7 @@ void CounterSM(){
 			}
 			break;
 		case RESET:
-			if(~PINA == 0x00){
+			if(temp == 0x00){
 				Counter_State = STANDBY;
 			}else{
 				Counter_State = RESET;
@@ -68,24 +70,32 @@ void CounterSM(){
 	}
 	switch(Counter_State){
 		case Start:
+			temp = ~PINA & 0x03;
 			PORTC = 0x00;
 			break;
 		case STANDBY:
+			temp = ~PINA & 0x03;
 			break;
 		case INC:
+			temp = ~PINA & 0x03;
 			PORTC = PINC+1;
 			break;
 		case DEC:
+			temp = ~PINA & 0x03;
 			PORTC = PINC-1;
 			break;
 		case INC_WAIT:
+			temp = ~PINA & 0x03;
 			break;
 		case DEC_WAIT:
+			temp = ~PINA & 0x03;
 			break;
 		case RESET:
+			temp = ~PINA & 0x03;
 			PORTC = 0x00;
 			break;
 		default:
+			temp = ~PINA & 0x03;
 			break;
 	}
 }
