@@ -17,6 +17,7 @@ enum Counter_States{Start, STANDBY, INC, DEC, INC_WAIT, DEC_WAIT, RESET}Counter_
 void CounterSM(){
 	switch(Counter_State){
 		case Start:
+			PORTC = 0x00;
 			Counter_State = STANDBY;
 			break;
 		case STANDBY:

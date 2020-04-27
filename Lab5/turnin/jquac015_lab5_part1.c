@@ -19,36 +19,38 @@ int main(void) {
 	DDRC = 0xFF;
 	PORTC = 0x00;
 	unsigned char led = 0x00;
+	unsigned char temp;
     while (1) {
-	if(~PINA==0x00){
+	    temp = ~PINA & 0x0F;
+	if(temp==0x00){
 		led = 0x00;
 		PORTC = led;
 	}
-	if(~PINA==0x01||~PINA==0x02){
+	if(temp==0x01||temp==0x02){
 		led = 0x20;
 		PORTC = led;
 	}
-	if(~PINA==0x03||~PINA==0x04){
+	if(temp==0x03||temp==0x04){
 		led = 0x30;
                 PORTC = led;
 	}
-	if(~PINA==0x05||~PINA==0x06){
+	if(temp==0x05||temp==0x06){
 		led = 0x38;
                 PORTC = led;
 	}
-	if(~PINA>=7 && ~PINA<=9){
+	if(temp>=7 && temp<=9){
 		led = 0x3C;
                 PORTC = led;
 	} 
-	if(~PINA>=10 && ~PINA<=12){
+	if(temp>=10 && temp<=12){
 		led = 0x3E;
                 PORTC = led;
 	} 
-	if(~PINA>=13 && ~PINA<=15){
+	if(temp>=13 && temp<=15){
 		led = 0x3F;
                 PORTC = led;
 	}
-	if(~PINA<=0x04){
+	if(temp<=0x04){
                 led = led | 0x40;
                 PORTC = led;
         }else{
