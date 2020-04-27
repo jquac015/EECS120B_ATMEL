@@ -12,91 +12,102 @@
 #include "simAVRHeader.h"
 #endif
 
-enum Light_States{Start, First, FirstW, Sec, SecW, Thr, ThrW}Light_State;
+enum Counter_States{Start, STANDBY, INC, DEC, INC_WAIT, DEC_WAIT, RESET}Counter_State;
+unsigned char temp;
 
-void LightSM(){
-	switch(Light_State){
+void CounterSM(){
+	switch(Counter_State){
 		case Start:
-			Light_State = First;
+			PORTC = 0x00;
+			temp = ~PINA & 0x03;
+			Counter_State = STANDBY;
 			break;
-		case FirstW:
-			if(~PINA & 0x01){
-				Light_State = First;
+		case STANDBY:
+			if(temp==0x03){
+				Counter_State = RESET;
+			}else if((temp&0x02) && (PINC>0)){
+				Counter_State = DEC;
+			}else if((temp&0x01) && (PINC<9)){
+				Counter_State = INC;
 			}else{
-				Light_State = FirstW;
+				Counter_State = STANDBY;
 			}
 			break;
-		case First:
-			if(PINA & 0x01){
-				Light_State = SecW;
+		case INC:
+			Counter_State = INC_WAIT;
+			break;
+		case DEC:
+			Counter_State = DEC_WAIT;
+			break;
+		case INC_WAIT:
+			if(temp==0x03){
+				Counter_State = RESET;
+			}else if(temp == 0x00){
+				Counter_State = STANDBY;
 			}else{
-				Light_State = First;
+				Counter_State = INC_WAIT;
 			}
 			break;
-		case SecW:
-			if(~PINA & 0x01){
-				Light_State = Sec;
+		case DEC_WAIT:
+			if(temp == 0x03){
+				Counter_State = RESET;
+			}else if(~PINA == 0x00){
+				Counter_State = STANDBY;
 			}else{
-				Light_State = SecW;
+				Counter_State = DEC_WAIT;
 			}
 			break;
-		case Sec:
-			if(PINA & 0x01){
-				Light_State = ThrW;
+		case RESET:
+			if(temp == 0x00){
+				Counter_State = STANDBY;
 			}else{
-				Light_State = Sec;
-			}
-			break;
-		case ThrW:
-			if(~PINA & 0x01){
-				Light_State = Thr;
-			}else{
-				Light_State = ThrW;
-			}
-			break;
-		case Thr:
-			if(PINA & 0x01){
-				Light_State = FirstW;
-			}else{
-				Light_State = Thr;
+				Counter_State = RESET;
 			}
 			break;
 		default:
-			Light_State = Start;
+			Counter_State = Start;
 			break;
 	}
-	switch(Light_State){
-		case FirstW:
-			PORTC = 0x36;
+	switch(Counter_State){
+		case Start:
+			temp = ~PINA & 0x03;
+			PORTC = 0x00;
 			break;
-		case First:
-			PORTC = 0x36;
+		case STANDBY:
+			temp = ~PINA & 0x03;
 			break;
-		case SecW:
-			PORTC = 0x1B;
+		case INC:
+			temp = ~PINA & 0x03;
+			PORTC = PINC+1;
 			break;
-		case Sec:
-			PORTC = 0x1B;
+		case DEC:
+			temp = ~PINA & 0x03;
+			PORTC = PINC-1;
 			break;
-		case ThrW:
-			PORTC = 0x2D;
+		case INC_WAIT:
+			temp = ~PINA & 0x03;
 			break;
-		case Thr:
-			PORTC = 0x2D;
+		case DEC_WAIT:
+			temp = ~PINA & 0x03;
+			break;
+		case RESET:
+			temp = ~PINA & 0x03;
+			PORTC = 0x00;
 			break;
 		default:
+			temp = ~PINA & 0x03;
 			break;
 	}
 }
 
 int main(void) {
-	DDRB = 0x00;
-	PORTB = 0x00;
+	DDRA = 0x00;
+	PORTA = 0xFF;
 	DDRC = 0xFF;
 	PORTC = 0x00;
-	Light_State = Start;
+	Counter_State = Start;
     while (1) {
-	LightSM();
+	CounterSM();
     }
     return 0;
 }
