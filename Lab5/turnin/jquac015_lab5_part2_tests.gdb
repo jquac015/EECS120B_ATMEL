@@ -26,41 +26,69 @@
 echo ======================================================\n
 echo Running all tests..."\n\n
 
-test "PINA: 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00 => PORTC: 0x36"
+test "PINA: 0x00, 0x01, 0x01, 0x00, 0x02, 0x02, 0x00 => PORTC: 0x00, state: STANDBY"
+set Counter_State = Start
 setPINA 0x00
-continue 5
+continue 2
 setPINA 0x01
-continue 5
-setPINA 0x00
-continue 5
+continue 2 
 setPINA 0x01
-continue 5
+continue 2
 setPINA 0x00
-continue 5
-setPINA 0x01
-continue 5
+continue 2
+setPINA 0x02
+continue 2
+setPINA 0x02
+continue 2
 setPINA 0x00
-continue 5
-expectPORTC 0x36
+continue 2
+expectPORTC 0x00
+expect Counter_State STANDBY
 checkResult
 
-test "PINA: 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00 => PORTC: 0x1B"
-setPINA 0x01
-continue 5
+test "PINA: 0x00, 0x03, 0x03, 0x00 ==> PORTC: 0x00, state: STANDBY"
+set Counter_State = Start
 setPINA 0x00
-continue 5
-expectPORTC 0x1B
+continue 2
+setPINA 0x03
+continue 2
+setPINA 0x03
+continue 2
+setPINA 0x00
+continue 2
+expectPORTC 0x00
+expect Counter_State STANDBY
 checkResult
 
-test "PINA: 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00, 0x01, 0x00 => PORTC: 0x2D"
-setPINA 0x01
-continue 5
+test "PINA: 0x00, 0x01, 0x03, 0x00 ==> PORTC: 0x00, state: STANDBY"
+set Counter_State = Start
 setPINA 0x00
-continue 5
-expectPORTC 0x2D
+continue 2
+setPINA 0x01
+continue 2
+setPINA 0x03
+continue 2
+setPINA 0x00
+continue 2
+expectPORTC 0x00
+expect Counter_State STANDBY
 checkResult
 
+test "PINA: 0x00, 0x02, 0x03, 0x00 ==> PORTC: 0x00, state: STANDBY"
+set Counter_State = Start
+setPINA 0x00
+continue 2
+setPINA 0x02
+continue 2
+setPINA 0x03
+continue 2
+setPINA 0x00
+continue 2
+expectPORTC 0x00
+expect Counter_State STANDBY
+checkResult
 
+# Report on how many tests passed/tests ran
 set $passed=$tests-$failed
 eval "shell echo Passed %d/%d tests.\n",$passed,$tests
 echo ======================================================\n
