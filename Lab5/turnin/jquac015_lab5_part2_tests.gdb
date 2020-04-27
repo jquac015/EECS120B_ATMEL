@@ -26,63 +26,63 @@
 echo ======================================================\n
 echo Running all tests..."\n\n
 
-test "PINA: 0x00, 0x01, 0x01, 0x00, 0x02, 0x02, 0x00 => PORTC: 0x00, state: STANDBY"
+test "PINA: 0xFF, 0xFE, 0xFE, 0xFF, 0xFD, 0xFD, 0xFF => PORTC: 0x00, state: STANDBY"
 set Counter_State = Start
-setPINA 0x00
+setPINA 0xFF
 continue 2
-setPINA 0x01
+setPINA 0xFE
 continue 2 
-setPINA 0x01
+setPINA 0xFE
 continue 2
-setPINA 0x00
+setPINA 0xFF
 continue 2
-setPINA 0x02
+setPINA 0xFD
 continue 2
-setPINA 0x02
+setPINA 0xFD
 continue 2
-setPINA 0x00
-continue 2
-expectPORTC 0x00
-expect Counter_State STANDBY
-checkResult
-
-test "PINA: 0x00, 0x03, 0x03, 0x00 ==> PORTC: 0x00, state: STANDBY"
-set Counter_State = Start
-setPINA 0x00
-continue 2
-setPINA 0x03
-continue 2
-setPINA 0x03
-continue 2
-setPINA 0x00
+setPINA 0xFF
 continue 2
 expectPORTC 0x00
 expect Counter_State STANDBY
 checkResult
 
-test "PINA: 0x00, 0x01, 0x03, 0x00 ==> PORTC: 0x00, state: STANDBY"
+test "PINA: 0xFF, 0xFC, 0xFC, 0xFF ==> PORTC: 0x00, state: STANDBY"
 set Counter_State = Start
-setPINA 0x00
+setPINA 0xFF
 continue 2
-setPINA 0x01
+setPINA 0xFC
 continue 2
-setPINA 0x03
+setPINA 0xFC
 continue 2
-setPINA 0x00
+setPINA 0xFF
 continue 2
 expectPORTC 0x00
 expect Counter_State STANDBY
 checkResult
 
-test "PINA: 0x00, 0x02, 0x03, 0x00 ==> PORTC: 0x00, state: STANDBY"
+test "PINA: 0xFF, 0xFE, 0xFC, 0xFF ==> PORTC: 0x00, state: STANDBY"
 set Counter_State = Start
-setPINA 0x00
+setPINA 0xFF
 continue 2
-setPINA 0x02
+setPINA 0xFE
 continue 2
-setPINA 0x03
+setPINA 0xFC
 continue 2
-setPINA 0x00
+setPINA 0xFF
+continue 2
+expectPORTC 0x00
+expect Counter_State STANDBY
+checkResult
+
+test "PINA: 0xFF, 0xFD, 0xFC, 0xFF ==> PORTC: 0x00, state: STANDBY"
+set Counter_State = Start
+setPINA 0xFF
+continue 2
+setPINA 0xFD
+continue 2
+setPINA 0xFC
+continue 2
+setPINA 0xFF
 continue 2
 expectPORTC 0x00
 expect Counter_State STANDBY

@@ -20,42 +20,42 @@ void LightSM(){
 			Light_State = First;
 			break;
 		case FirstW:
-			if(~PINA & 0x01){
+			if(PINA & 0x01){
 				Light_State = First;
 			}else{
 				Light_State = FirstW;
 			}
 			break;
 		case First:
-			if(PINA & 0x01){
+			if(~PINA & 0x01){
 				Light_State = SecW;
 			}else{
 				Light_State = First;
 			}
 			break;
 		case SecW:
-			if(~PINA & 0x01){
+			if(PINA & 0x01){
 				Light_State = Sec;
 			}else{
 				Light_State = SecW;
 			}
 			break;
 		case Sec:
-			if(PINA & 0x01){
+			if(~PINA & 0x01){
 				Light_State = ThrW;
 			}else{
 				Light_State = Sec;
 			}
 			break;
 		case ThrW:
-			if(~PINA & 0x01){
+			if(PINA & 0x01){
 				Light_State = Thr;
 			}else{
 				Light_State = ThrW;
 			}
 			break;
 		case Thr:
-			if(PINA & 0x01){
+			if(~PINA & 0x01){
 				Light_State = FirstW;
 			}else{
 				Light_State = Thr;
